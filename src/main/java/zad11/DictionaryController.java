@@ -2,8 +2,6 @@ package main.java.zad11;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.swing.text.html.Option;
 class DictionaryController {
     private static final int TEST_SIZE = 4;
     private final DataRepository dataRepository = new DataRepository();
@@ -43,7 +41,7 @@ class DictionaryController {
             System.out.println("Dodaj przynajmniej jedną frazę do bazy.");
             return;
         }
-        final int testSize = Math.sin(dataRepository.size(), TEST_SIZE);
+        final int testSize = Math.min(dataRepository.size(), TEST_SIZE);
         Set<Data> randomEntries = dataRepository.getRandomEntries(testSize);
         int score = 0;
         for (Data data: randomEntries) {
@@ -66,6 +64,15 @@ class DictionaryController {
         Data data = new Data(original, translation);
         dataRepository.add(data);
     }
+    private void close() {
+        try {
+            fileService.saveEntries(dataRepository.getAll());
+            System.out.println("Zapisano stan aplikacji");
+        } catch (IOException e) {
+            System.out.println("Nie udało się zapisać zmian");
+        }
+        System.out.println("Bye Bye");
+    }
     private void printMenu() {
         System.out.println("Wybierz opcję:");
         for (Option option : Option.values()) {
@@ -76,5 +83,21 @@ class DictionaryController {
         ADD_ENTRY(1,"Dodaj tekst z tłumaczeniem"),
         START_TEST(2,"Rozpocznij test"),
         EXIT(3,"Koniec programu");
+        private final int optionNumber;
+        private final String description;
+        Option(int optionNumber, String description) {
+            this.optionNumber = optionNumber;
+            this.description = description;
+        }
+        static Option fromInt(int option) {
+            if (option < 0 || option > values().length) {
+                throw new IllegalArgumentException("Opcja o takim numerze nie istnieje");
+            }
+            return values()[option - 1];
+        }
+        @Override
+        public String toString() {
+            return String.format("%d - %s",optionNumber, description);
+        }
     }
 }
