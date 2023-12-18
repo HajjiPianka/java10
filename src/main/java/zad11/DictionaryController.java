@@ -66,4 +66,15 @@ class DictionaryController {
         Data data = new Data(original, translation);
         dataRepository.add(data);
     }
+    private void printMenu() {
+        System.out.println("Wybierz opcję:");
+        for (Option option : Option.values()) {
+            System.out.println(option);
+        }
+    }
+    private static enum Option {
+        ADD_ENTRY(1,"Dodaj tekst z tłumaczeniem"),
+        START_TEST(2,"Rozpocznij test"),
+        EXIT(3,"Koniec programu");
+    }
 }
